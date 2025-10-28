@@ -12,7 +12,13 @@ import (
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "index.html")
+	cwd, err := os.Getwd()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Ошибка при получении текущей директории: %v", err), http.StatusMethodNotAllowed)
+		return
+	}
+	htmlPath := filepath.Join(cwd, "../index.html")
+	http.ServeFile(w, r, htmlPath)
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +31,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ошибка парсинга формы", http.StatusInternalServerError)
 		return
 	}
-	file, handler, err := r.FormFile("file")
+	file, handler, err := r.FormFile("myFile")
 	if err != nil {
 		http.Error(w, "Ошибка при извлечении файла", http.StatusInternalServerError)
 		return
