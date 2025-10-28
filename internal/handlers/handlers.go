@@ -12,12 +12,13 @@ import (
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
+
 	cwd, err := os.Getwd()
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Ошибка при получении текущей директории: %v", err), http.StatusMethodNotAllowed)
 		return
 	}
-	htmlPath := filepath.Join(cwd, "../index.html")
+	htmlPath := filepath.Join(cwd, "index.html")
 	http.ServeFile(w, r, htmlPath)
 }
 
