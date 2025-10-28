@@ -1,28 +1,34 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"strings"
-	"github.com/SlowPRO-Alex/final-sprint6/tree/main/pkg/morse"
+
+	"github.com/SlowPRO-Alex/final-sprint6/tree/first-iteration/pkg/morse"
 )
 
-func typeDetector (input string) (output string) {
-	if len(input) = 0 {
-		return "Ошибка: строка пуста!"
+var output string
+
+func TypeDetector(input string) (string, error) {
+	if len(input) == 0 {
+		return "", errors.New("Ошибка: строка пуста!")
 	}
 	fmt.Println("Определяем тип данных...")
-	textType := "код морзе"
+	textType := "текст"
 	for _, v := range input {
-		if strings.ContainsAny(v, "-.") != true {
-			textType = "текст"
+		vstr := fmt.Sprintf("%c", v)
+
+		if strings.ContainsAny(vstr, "-.") {
+			textType = "код морзе"
 			break
 		}
 	}
-	if textType = "код морзе" {
-		output = ToText(input) 
+	if textType == "код морзе" {
+		output = morse.ToText(input)
 	} else {
-		output = ToMorse(input)
+		output = morse.ToMorse(input)
 	}
-	fmt.Println("%s это %s\n", input, textType)
-	return output
+	fmt.Printf("%s это %s\n", input, textType)
+	return output, nil
 }
